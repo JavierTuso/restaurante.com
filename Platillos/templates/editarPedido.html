@@ -1,0 +1,79 @@
+{# heredando header y footer #}
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="{% url 'procesarActualizacionPedido' pedido.idPedido_jt %}" method="post" enctype="multipart/form-data">
+
+      {% csrf_token %}
+
+      <br>
+      <input type="hidden" name="idPedido_jt"  value="{{pedido.idPedido_jt}}">
+      <b>Nombre Cliente:</b>
+      <select class="form-control" name="nombre" id="nombre" required>
+          <option value="">---Seleccione el nombre del Cliente-----</option>
+          {% for cliente in clientes %}
+              <option value="{{cliente.id_jt}}" {% if cliente.id_jt == pedido.cliente.id_jt %}selected{% endif %}>
+                  {{cliente.nombre_jt}}
+              </option>
+          {% endfor %}
+      </select>
+      <br>
+      <b>Nombre del Platillo:</b>
+      <select class="form-control" name="platillo" id="platillo" required>
+          <option value="">---Seleccione el nombre del platillo-----</option>
+          {% for platillo in platillos %}
+              <option value="{{ platillo.idPlatillo_jt }}" {% if platillo.platillo and platillo.platillo.idPlatillo_jt == platillo.idPlatillo_jt %}selected{% endif %}>
+                  {{ platillo.nombrePlatillo_jt }}
+              </option>
+          {% endfor %}
+      </select>
+      <br>
+      <b>Tipo Platillo:</b>
+      <select class="form-control" name="tipo" id="tipo" required>
+          <option value="">---Seleccione el tipo de platillo-----</option>
+          {% for tipo in tipos %}
+              <option value="{{ tipo.idTipo_jt }}" {% if platillo.tipo and platillo.tipo.idTipo_jt == tipo.idTipo_jt %}selected{% endif %}>
+                  {{ tipo.nombreTipo_jt }}
+              </option>
+          {% endfor %}
+      </select>
+      <br>
+      <b>Fecha pedido:</b>
+      <input type="date" name="fechaPedido_jt" id="fechaPedido_jt"
+      value="{{pedido.fechaPedido_jt}}" placeholder="Ingrese el pedidpo"
+      class="form-control" required>
+      <br>
+      <b>Descripcion:</b>
+      <input type="text" name="descripcionPedido_jt" id="descripcionPedido_jt"
+      value="{{pedido.descripcionPedido_jt}}" placeholder="Ingrese la descripcion"
+      class="form-control" required>
+      <br>
+      <b>Hora de pedido:</b>
+      <input type="time" name="horaPedido_jt" id="horaPedido_jt"
+      value="{{pedido.horaPedido_jt}}" placeholder="Ingrese el nombre"
+      class="form-control" required>
+      <br>
+      <b>Fotografia</b>
+      <input type="file" name="fotografiaPedido_jt" id="fotografiaPedido_jt" accept="image/*"  class="form-control" >
+      <br>
+
+      <center>
+        <button type="submit" name="button"
+        class="btn btn-primary">
+          &nbsp;&nbsp;&nbsp;Guardar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/pedido/"
+        class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

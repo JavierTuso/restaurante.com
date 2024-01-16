@@ -1,0 +1,46 @@
+{# heredando header y footer #}
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="{% url 'procesarActualizacionIngrediente' ingrediente.idIngrediente_jt %}" method="post" enctype="multipart/form-data">
+
+      {% csrf_token %}
+
+      <br>
+      <input type="hidden" name="idIngrediente_jt"  value="{{ingrediente.idIngrediente_jt}}">
+
+      <br>
+      <b>Nombre de ingrediente:</b>
+      <input type="text" name="nombreIngrediente_jt" id="nombreIngrediente_jt"
+      value="{{ingrediente.nombreIngrediente_jt}}" placeholder="Ingrese el ingrediente"
+      class="form-control" required>
+      <br>
+      <b>Fecha de expiracion</b>
+      <input type="date" name="fechaExpiracion_jt" id="fechaExpiracion_jt"
+      value="{{ingrediente.fechaExpiracion_jt}}" placeholder="Ingreseel la fecha de expiracion"
+      class="form-control" required>
+      <br>
+      <b>Fotografia:</b>
+      <input type="file" name="fotografiaIngrediente_jt" id="fotografiaIngrediente_jt" accept="image/*" value="" class="form-control">
+      <br>
+     <br>
+      <center>
+        <button type="submit" name="button"
+        class="btn btn-primary">
+          &nbsp;&nbsp;&nbsp;Guardar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/ingrediente/"
+        class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

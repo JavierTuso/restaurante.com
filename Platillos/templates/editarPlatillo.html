@@ -1,0 +1,55 @@
+{# heredando header y footer #}
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="{% url 'procesarActualizacionPlatillo' platillo.idPlatillo_jt %}" method="post" enctype="multipart/form-data">
+
+      {% csrf_token %}
+
+      <br>
+      <input type="hidden" name="idPlatillo_jt"  value="{{platillo.idPlatillo_jt}}">
+      <b>Nombre Platillo:</b>
+      <input type="text" name="nombrePlatillo_jt" id="nombrePlatillo_jt"
+      value="{{platillo.nombrePlatillo_jt}}" placeholder="Ingrese el nombre del platillo"
+      class="form-control" required>
+      <br>
+      <b>Tipo de Platillo:</b>
+      <select class="form-control" name="tipo" id="tipo" required>
+          <option value="">---Seleccione el tipo de platillo-----</option>
+          {% for tipo in tipos %}
+              <option value="{{ tipo.idTipo_jt }}" {% if platillo.tipo and platillo.tipo.idTipo_jt == tipo.idTipo_jt %}selected{% endif %}>
+                  {{ tipo.nombreTipo_jt }}
+              </option>
+          {% endfor %}
+      </select>
+      <br>
+      <b>Descripcion:</b>
+      <input type="text" name="descripcionPlatillo_jt" id="descripcionPlatillo_jt"
+      value="{{platillo.descripcionPlatillo_jt}}" placeholder="Ingrese la descripcion"
+      class="form-control" required>
+      <br>
+      <b>Precio:</b>
+      <input type="number" name="precioPlatillo_jt" id="precioPlatillo_jt"
+      value="{{platillo.precioPlatillo_jt}}" placeholder="Ingrese el precio del platillo"
+      class="form-control" required>
+      <br>
+      <center>
+        <button type="submit" name="button"
+        class="btn btn-primary">
+          &nbsp;&nbsp;&nbsp;Guardar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/platillo/"
+        class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

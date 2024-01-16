@@ -1,0 +1,66 @@
+{# heredando header y footer #}
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="{% url 'procesarActualizacionReceta' receta.idReceta_jt %}" method="post" enctype="multipart/form-data">
+
+      {% csrf_token %}
+
+      <br>
+      <input type="hidden" name="idReceta_jt"  value="{{receta.idReceta_jt}}">
+      <br>
+      <b>Nombre del Platillo:</b>
+      <select class="form-control" name="platillo" id="platillo" required>
+          <option value="">---Seleccione el nombre del platillo-----</option>
+          {% for platillo in platillos %}
+              <option value="{{ platillo.idPlatillo_jt }}" {% if platillo.platillo and platillo.platillo.idPlatillo_jt == platillo.idPlatillo_jt %}selected{% endif %}>
+                  {{ platillo.nombrePlatillo_jt }}
+              </option>
+          {% endfor %}
+      </select>
+      <br>
+      <b>Nombre del Ingrediente:</b>
+      <select class="form-control" name="ingrediente" id="ingrediente" required>
+          <option value="">---Seleccione el nombre del ingrediente-----</option>
+          {% for ingrediente in ingredientes %}
+              <option value="{{ ingrediente.idIngrediente_jt }}" {% if receta.ingrediente and receta.ingrediente.idIngrediente_jt == ingrediente.idIngrediente_jt %}selected{% endif %}>
+                  {{ ingrediente.nombreIngrediente_jt }}
+              </option>
+          {% endfor %}
+      </select>
+      <br>
+      <b>Pasos Receta:</b>
+      <input type="text" name="pasosReceta_jt" id="pasosReceta_jt"
+      value="{{receta.pasosReceta_jt}}" placeholder="Ingrese los pasos"
+      class="form-control" required>
+      <br>
+      <b>Tiempo:</b>
+      <input type="number" name="tiempoPreparacion_jt" id="tiempoPreparacion_jt"
+      value="{{receta.tiempoPreparacion_jt}}" placeholder="Ingrese el tiempo de preparacion"
+      class="form-control" required>
+      <br>
+      <b>Dificultades:</b>
+      <input type="text" name="dificultadReceta_jt" id="dificultadReceta_jt"
+      value="{{receta.dificultadReceta_jt}}" placeholder="Ingrese la dificultad"
+      class="form-control" required>
+      <center>
+        <br>
+        <button type="submit" name="button"
+        class="btn btn-primary">
+          &nbsp;&nbsp;&nbsp;Guardar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/receta/"
+        class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

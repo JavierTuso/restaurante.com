@@ -1,0 +1,67 @@
+{# heredando header y footer #}
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+
+<div class="container">
+    <h3>Detalle de Pedidos</h3>
+    <table class="table" id="tbl_pedidos">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NOMBRE CLIENTE</th>
+                <th>NOMBRE PLATILLO</th>
+                <th>TIPO DE PLATILLO</th>
+                <th>FECHA PEDIDO</th>
+                <th>DESCRIPCION</th>
+                <th>HORA PEDIDO</th>
+                <th>FOTOGRAFIA</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+                <tr>
+                    <td>{{ pedido.idPedido_jt }}</td>
+                    <td>{{ pedido.nombre.nombre_jt }}</td>
+                    <td>{{ pedido.tipo.nombreTipo_jt }}</td>
+                    <td>{{ pedido.platillo.nombrePlatillo_jt }}</td>
+                    <td>{{ pedido.fechaPedido_jt }}</td>
+                    <td>{{ pedido.descripcionPedido_jt }}</td>
+                    <td>{{ pedido.horaPedido_jt }}</td>
+                    <td>
+                        {% if pedido.fotografiaPedido_jt %}
+                            <a href="{{ pedido.fotografiaPedido_jt.url }}" target="_blank">
+                                <img src="{{ pedido.fotografiaPedido_jt.url }}" alt="">
+                            </a>
+                        {% else %}
+                            <b>N/A</b>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+<script type="text/javascript">
+     //let table = new DataTable('#tbl_clientes');
+      $('#tbl_pedidos').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'pdfHtml5',
+                messageTop: 'REPORTES DE CLIENTES -DJANGO Y DATATABLES'
+            },
+            'print',
+            'csv'
+        ],
+        language: {
+              url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+          }
+      } );
+    </script>
+
+
+{% endblock %}

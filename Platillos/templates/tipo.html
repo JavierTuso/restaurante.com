@@ -1,0 +1,158 @@
+{# heredando header y footer#}
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<div class="seccion-con-fondo" style="background-image: url('{% static 'img/fondo.png' %}'); background-size: cover; background-position: center; opacity:0.9;>
+
+
+
+    <div class="row">
+      <div class="col-md-4 mx-auto">
+        <br>
+        <h1>TIPOS DE COMIDAS</h1>
+        <br>
+        <br>
+        <form class="3" action="/guardarTipo/" method="post" enctype="multipart/form-data" id="frm_nuevo_tipo" style= "border-radius:10px;border: 3px solid #ccc; padding: 20px;">
+          {% csrf_token %}
+
+
+          <br>
+          <b>Tipo de Platillo:</b>
+          <input type="text" name="nombreTipo_jt" id="nombreTipo_jt" value=""placeholder="Ingrese el tipo de platillo" class="form-control" required>
+          <br>
+          <b>Descripcion:</b>
+          <textarea name="descripcionTipo_jt" id="descripcionTipo_jt" rows="3" class="form-control" placeholder="Ingrese la descripcion" class="form-control" required>
+            </textarea>
+          <br>
+          <b>Categoria:</b>
+          <input type="text" name="categoriaTipo_jt" id="categoriaTipo_jt" value=""placeholder="Ingrese la categoria" class="form-control" required>
+
+          <br>
+            <center>
+            <button type="submit" name="button" class="btn btn-primary">
+              GUARDAR  </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="reset" name="button" class="btn btn-warning">CANCELAR</button>
+            </center>
+          </form>
+          <br>
+          <br>
+        </div>
+      </div>
+          </div>
+          <br>
+          <br>
+      <div class="container">
+           <br>
+        <table class="table" id="tbl_tipos">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>TIPO DE PLATILLO</th>
+              <th>DESCRIPCION</th>
+              <th>CATEGORIA</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+        <tbody>
+          {% for tipo in tipos %}
+            <tr>
+              <td> {{tipo.idTipo_jt}}</td>
+              <td> {{tipo.nombreTipo_jt}}</td>
+              <td> {{tipo.descripcionTipo_jt}} </td>
+              <td> {{tipo.categoriaTipo_jt}}</td>
+
+              <td>
+                <a href="/editarTipo/{{tipo.idTipo_jt}}" class="btn btn-info">Editar</a>
+                <a href="javascript:void(0)"
+                onclick="eliminarTipo('/eliminarTipo/{{tipo.idTipo_jt}}');"
+                class="btn btn-danger">
+                  Eliminar
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        </table>
+      </div>
+
+    </div>
+      <script type="text/javascript">
+        function eliminarTipo(url){
+          iziToast.question({
+              timeout: 15000,
+              close: true,
+              overlay: true,
+              displayMode: 'once',
+              id: 'question',
+              zindex: 999,
+              title: 'CONFIRMACIÓN',
+              message: '¿Está seguro de eliminar la fila seleccionada?',
+              position: 'center',
+              buttons: [
+                  ['<button><b>SI</b></button>', function (instance, toast) {
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                      window.location.href=url;
+                  }, true],
+                  ['<button>NO</button>', function (instance, toast) {
+
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                  }],
+              ]
+          });
+        }
+        // Muestra un mensaje de éxito para el guardado
+              {% if messages %}
+                {% for message in messages %}
+                          iziToast.success({
+                              title: 'Éxito',
+                              message: '{{ message }}',
+                              position: 'topRight',
+                          });
+                      {% endfor %}
+              {% endif %}
+      </script>
+      <script type="text/javascript">
+       $("#frm_nuevo_tipo").validate({
+         rules:{
+
+            "nombreTipo_jt":{
+              required:true,
+
+            },
+            "descripcionTipo_jt":{
+              required:true
+            },
+            "categoriaTipo_jt":{
+              required:true
+            },
+         },
+         messages:{
+           "nombreTipo_jt":{
+             required:"Debe ingresar el tipo de platillo",
+
+           },
+           "descripcionTipo_jt":{
+             required:"Debe ingresar la descripcion"
+           },
+           "categoriaTipo_jt":{
+             required:"Debe ingresar la categoria"
+           },
+         }
+       });
+    </script>
+
+    <script type="text/javascript">
+           //et table = new DataTable('#tbl_tipos');
+            $('#tbl_tipos').DataTable( {
+              dom: 'Bfrtip',
+              buttons: [
+              ],language: {
+              url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+          }
+            } );
+          </script>
+
+
+{% endblock %}

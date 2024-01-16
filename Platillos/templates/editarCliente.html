@@ -1,0 +1,72 @@
+{# heredando header y footer #}
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="{% url 'procesarActualizacionCliente' cliente.id_jt %}" method="post" enctype="multipart/form-data">
+
+      {% csrf_token %}
+
+      <br>
+      <input type="hidden" name="id_jt"  value="{{cliente.id_jt}}">
+      <b>Cedula:</b>
+      <input type="number" name="cedula_jt" id="cedula_jt"
+      value="{{cliente.cedula_jt}}" placeholder="Ingrese la cédula"
+      class="form-control" required>
+      <br>
+      <b>Apellido:</b>
+      <input type="text" name="apellido_jt" id="apellido_jt"
+      value="{{cliente.apellido_jt}}" placeholder="Ingrese el apellido"
+      class="form-control" required>
+      <br>
+      <b>Nombre:</b>
+      <input type="text" name="nombre_jt" id="nombre_jt"
+      value="{{cliente.nombre_jt}}" placeholder="Ingrese el nombre"
+      class="form-control" required>
+      <br>
+     <b>Direccion:</b>
+      <textarea name="direccion_jt" id="direccion_jt"
+      rows="3" class="form-control"
+      placeholder="Ingrese la dirección"
+      >{{cliente.direccion_jt}}</textarea>
+      <br>
+      <select class="form-control" name="provincia" id="provincia" required>
+        <option value="">--- Seleccione la provincia del cliente ---</option>
+        {% for provincia in provincias %}
+            <option value="{{ provincia.id_jt }}" {% if cliente.provincia.id_jt == provincia.id_jt %}selected{% endif %}>
+                {{ provincia.nombre_jt }}
+            </option>
+        {% endfor %}
+      </select>
+
+      <b>Fecha de nacimiento:</b>
+      <input type="date" name="fecha_nacimiento_jt"
+      id="fecha_nacimiento_jt"
+      value="{{cliente.fecha_nacimiento_jt|date:'Y-m-d'}}" placeholder="Ingrese la fecha de nacimiento"
+      class="form-control" required>
+      <br>
+      <b>EMAIL:</b>
+      <input type="email" name="correo_jt" id="correo_jt"
+      value="{{cliente.correo_jt}}" placeholder="Ingrese el correo"
+      class="form-control" required>
+      <br>
+
+      <center>
+        <button type="submit" name="button"
+        class="btn btn-primary">
+          &nbsp;&nbsp;&nbsp;Guardar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/cliente/"
+        class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

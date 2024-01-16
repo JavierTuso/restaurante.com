@@ -1,0 +1,47 @@
+{# heredando header y footer #}
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br> <br>
+    <form class="" action="{% url 'procesarActualizacionTipo' tipo.idTipo_jt %}" method="post" enctype="multipart/form-data">
+
+      {% csrf_token %}
+
+      <br>
+      <input type="hidden" name="idTipo_jt"  value="{{tipo.idTipo_jt}}">
+
+      <br>
+      <b>Tipo de platillo:</b>
+      <input type="text" name="nombreTipo_jt" id="nombreTipo_jt"
+      value="{{tipo.nombreTipo_jt}}" placeholder="Ingrese la cédula"
+      class="form-control" required>
+      <br>
+      <b>Tipo:</b>
+      <input type="text" name="descripcionTipo_jt" id="descripcionTipo_jt"
+      value="{{tipo.descripcionTipo_jt}}" placeholder="Ingreseel la descripcion"
+      class="form-control" required>
+      <br>
+      <b>Categoria:</b>
+      <input type="text" name="categoriaTipo_jt" id="categoriaTipo_jt"
+      value="{{tipo.categoriaTipo_jt}}" placeholder="Ingrese la categoria"
+      class="form-control" required>
+     <br>
+      <center>
+        <button type="submit" name="button"
+        class="btn btn-primary">
+          &nbsp;&nbsp;&nbsp;Guardar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/tipo/"
+        class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

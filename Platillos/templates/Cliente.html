@@ -1,0 +1,211 @@
+{# heredando header y footer#}
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<div class="seccion-con-fondo" style="background-image: url('{% static 'img/fondo.png' %}'); background-size: cover; background-position: center;">
+
+
+
+    <div class="row">
+      <div class="col-md-4 mx-auto">
+        <br>
+        <h1>LISTADO DE CLIENTES</h1>
+        <br>
+        <br>
+        <form class="3" action="/guardarCliente/" method="post" enctype="multipart/form-data" id="frm_nuevo_cliente" style= "border-radius:10px;border: 3px solid #ccc; padding: 20px;">
+          {% csrf_token %}
+          <br>
+          <b>Cedula:</b>
+          <input type="number" name="cedula_jt" id="cedula_jt" value=""placeholder="Ingrese la cedula" class="form-control" required>
+          <br>
+          <b>Apellido</b>
+          <input type="text" name="apellido_jt" id="apellido_jt" value=""placeholder="Ingrese el apellido" class="form-control" required>
+
+          <br>
+          <b>Nombre:</b>
+          <input type="text" name="nombre_jt" id="nombre_jt" value=""placeholder="Ingrese el nombre" class="form-control" required>
+
+          <br>
+          <b>Direccion:</b>
+          <textarea name="direccion_jt" id="direccion_jt" rows="3" class="form-control" placeholder="Ingrese la direccion" class="form-control" required>
+            </textarea>
+            <br>
+            <b>Provincia:</b>
+              <select class="form-control" name="provincia" id="provincia" required>
+                  <option value="">--- Seleccione la provincia del cliente ---</option>
+                  {% for provincia in provincias %}
+                      <option value="{{ provincia.id_jt }}">
+                          {{ provincia.nombre_jt }}
+                      </option>
+                  {% endfor %}
+              </select>
+
+               <br>
+            <b>Fecha de nacimiento:</b>
+            <input type="date" name="fecha_nacimiento_jt" id="fecha_nacimiento_jt" value=""placeholder="Ingrese la fecha" class="form-control" required>
+            <br>
+            <b>Correo:</b>
+            <input type="email" name="correo_jt" id="correo_jt" value=""placeholder="Ingrese el correo " class="form-control" required>
+            <br>
+            <center>
+            <button type="submit" name="button" class="btn btn-primary">
+              GUARDAR  </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="reset" name="button" class="btn btn-warning">CANCELAR</button>
+            </center>
+          </form>
+          <br>
+          <br>
+        </div>
+      </div>
+          </div>
+          <br>
+          <br>
+      <div class="container">
+           <br>
+        <table class="table" id="tbl_clientes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>CEDULA</th>
+              <th>APELLIDO</th>
+              <th>NOMBRE</th>
+              <th>DIRECCION</th>
+              <th>PROVINCIA</th>
+              <th>CORREO</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+        <tbody>
+          {% for cliente in clientes %}
+            <tr>
+              <td> {{cliente.id_jt}}</td>
+              <td> {{cliente.cedula_jt}} </td>
+              <td> {{cliente.apellido_jt}}</td>
+              <td> {{cliente.nombre_jt}}</td>
+              <td> {{cliente.direccion_jt}}</td>
+              <td> {{cliente.provincia.nombre_jt}} </td>
+              <td> {{cliente.correo_jt}}</td>
+
+              <td>
+                <a href="/editarCliente/{{cliente.id_jt}}" class="btn btn-info">Editar</a>
+                <a href="javascript:void(0)"
+                onclick="eliminarCliente('/eliminarCliente/{{cliente.id_jt}}');"
+                class="btn btn-danger">
+                  Eliminar
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        </table>
+      </div>
+
+    </div>
+      <script type="text/javascript">
+        function eliminarCliente(url){
+          iziToast.question({
+              timeout: 15000,
+              close: true,
+              overlay: true,
+              displayMode: 'once',
+              id: 'question',
+              zindex: 999,
+              title: 'CONFIRMACIÓN',
+              message: '¿Está seguro de eliminar la fila seleccionada?',
+              position: 'center',
+              buttons: [
+                  ['<button><b>SI</b></button>', function (instance, toast) {
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                      window.location.href=url;
+                  }, true],
+                  ['<button>NO</button>', function (instance, toast) {
+
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                  }],
+              ]
+          });
+        }
+        // Muestra un mensaje de éxito para el guardado
+              {% if messages %}
+                {% for message in messages %}
+                          iziToast.success({
+                              title: 'Éxito',
+                              message: '{{ message }}',
+                              position: 'topRight',
+                          });
+                      {% endfor %}
+              {% endif %}
+      </script>
+      <script type="text/javascript">
+       $("#frm_nuevo_cliente").validate({
+         rules:{
+
+            "cedula_jt":{
+              required:true,
+              minlength:10,
+              maxlength:10
+            },
+            "apellido_jt":{
+              required:true
+            },
+            "nombre_jt":{
+              required:true
+            },
+            "direccion_jt":{
+              required:true
+            },
+            "provincia":{
+              required:true
+            },
+            "fecha_nacimiento_jt":{
+              required:true
+            },
+            "correo_jt":{
+              required:true,
+              email:true
+            },
+         },
+         messages:{
+           "cedula_jt":{
+             required:"Debe ingresar el número de cédula del cliente",
+             minlength:"La cédula no debe tener menos de 10 digitos",
+             maxlength:"La cédula no debe tener más de 10 digitos",
+           },
+           "apellido_jt":{
+             required:"Debe ingresar el apellido del cliente"
+           },
+           "nombre_jt":{
+             required:"Debe ingresar el nombre del cliente"
+           },
+           "direccion_jt":{
+             required:"Debe ingresar la dirección cliente"
+           },
+           "provincia":{
+             required:"Debe elegir la provincia"
+           },
+           "fecha_nacimiento_jt":{
+             required:"Debe seleccionar la fecha de nacimiento del cliente"
+           },
+           "correo_jt":{
+             required:"Ingrese el correo electronico",
+             email:"Dirección de email no válida"
+           },
+         }
+       });
+    </script>
+
+    <script type="text/javascript">
+          // let table = new DataTable('#tbl_tipos');
+            $('#tbl_clientes').DataTable( {
+              dom: 'Bfrtip',
+              buttons: [
+              ],language: {
+              url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+          }
+            } );
+          </script>
+
+
+{% endblock %}

@@ -1,0 +1,161 @@
+{# heredando header y footer#}
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<div class="seccion-con-fondo" style="background-image: url('{% static 'img/fondo.png' %}'); background-size: cover; background-position: center; opacity:0.9;>
+
+
+
+    <div class="row">
+      <div class="col-md-4 mx-auto">
+        <br>
+        <h1>LISTADO DE INGREDIENTES</h1>
+        <br>
+        <br>
+        <form class="3" action="/guardarIngrediente/" method="post" enctype="multipart/form-data" id="frm_nuevo_ingrediente" style= "border-radius:10px;border: 3px solid #ccc; padding: 20px;">
+          {% csrf_token %}
+
+          <br>
+          <b>Nombre Ingrediente:</b>
+          <input type="text" name="nombreIngrediente_jt" id="nombreIngrediente_jt" value=""placeholder="Ingrese el nombre del ingrediente" class="form-control" required>
+          <br>
+          <b>Fecha de expiracion:</b>
+          <input type="date" name="fechaExpiracion_jt" id="fechaExpiracion_jt" value=""placeholder="Ingrese la fecha de expiracion" class="form-control" required>
+          <br>
+          <b>Fotografia:</b>
+          <input type="file" name="fotografiaIngrediente_jt" id="fotografiaIngrediente_jt" accept="image/*" value="" class="form-control">
+          <br>
+            <center>
+            <button type="submit" name="button" class="btn btn-primary">
+              GUARDAR  </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="reset" name="button" class="btn btn-warning">CANCELAR</button>
+            </center>
+          </form>
+          <br>
+          <br>
+        </div>
+      </div>
+          </div>
+          <br>
+          <br>
+      <div class="container">
+           <br>
+        <table class="table" id="tbl_ingredientes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>NOMBRE DEL INGREDIENTE</th>
+              <th>FECHA DE EXPIRACION</th>
+              <th>FOTOGRAFIA</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+        <tbody>
+          {% for ingrediente in ingredientes %}
+            <tr>
+              <td> {{ingrediente.idIngrediente_jt}}</td>
+              <td> {{ingrediente.nombreIngrediente_jt}}</td>
+              <td> {{ingrediente.fechaExpiracion_jt}} </td>
+              <td>
+                {%if ingrediente.fotografiaIngrediente_jt%}
+                <a href="{{ingrediente.fotografiaIngrediente_jt.url}}" target="_blank">
+                <img src="{{ingrediente.fotografiaIngrediente_jt.url}}" alt=""></a>
+                {%else%}
+                <b>N/A</b>
+                {%endif%}
+              </td>
+              <td>
+                <a href="/editarIngrediente/{{ingrediente.idIngrediente_jt}}" class="btn btn-info">Editar</a>
+                <a href="javascript:void(0)"
+                onclick="eliminarIngrediente('/eliminarIngrediente/{{ingrediente.idIngrediente_jt}}');"
+                class="btn btn-danger">
+                  Eliminar
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        </table>
+      </div>
+
+    </div>
+      <script type="text/javascript">
+        function eliminarIngrediente(url){
+          iziToast.question({
+              timeout: 15000,
+              close: true,
+              overlay: true,
+              displayMode: 'once',
+              id: 'question',
+              zindex: 999,
+              title: 'CONFIRMACIÓN',
+              message: '¿Está seguro de eliminar la fila seleccionada?',
+              position: 'center',
+              buttons: [
+                  ['<button><b>SI</b></button>', function (instance, toast) {
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                      window.location.href=url;
+                  }, true],
+                  ['<button>NO</button>', function (instance, toast) {
+
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                  }],
+              ]
+          });
+        }
+        // Muestra un mensaje de éxito para el guardado
+              {% if messages %}
+                {% for message in messages %}
+                          iziToast.success({
+                              title: 'Éxito',
+                              message: '{{ message }}',
+                              position: 'topRight',
+                          });
+                      {% endfor %}
+              {% endif %}
+      </script>
+      <script type="text/javascript">
+       $("#frm_nuevo_ingrediente").validate({
+         rules:{
+
+            "nombreIngrediente_jt":{
+              required:true,
+
+            },
+            "fechaExpiracion_jt":{
+              required:true
+            },
+            "fotografiaIngrediente_jt":{
+              required:true
+            },
+         },
+         messages:{
+           "nombreIngrediente_jt":{
+             required:"Debe ingresar el nombre del ingrediente",
+
+           },
+           "fechaExpiracion_jt":{
+             required:"Debe ingresar la fecha de expiracion"
+           },
+           "fotografiaIngrediente_jt":{
+             required:"Debe ingresar la fotografia"
+           },
+         }
+       });
+    </script>
+
+    <script type="text/javascript">
+          // let table = new DataTable('#tbl_tipos');
+            $('#tbl_ingredientes').DataTable( {
+              dom: 'Bfrtip',
+              buttons: [
+              ],language: {
+              url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+          }
+            } );
+          </script>
+
+
+{% endblock %}

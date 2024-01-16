@@ -1,0 +1,73 @@
+{# heredando header y footer #}
+{% extends "./plantilla.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8">
+    <br>
+    <form class="" action="{% url 'procesarActualizacionProvincia' provincia.id_jt %}" method="post" enctype="multipart/form-data">
+
+      {% csrf_token %}
+      <input type="hidden" name="id_jt"  value="{{provincia.id_jt}}">
+
+      <b>Region:</b>
+      <input type="text" name="region_jt" id="region_jt"
+      value="{{provincia.region_jt}}" placeholder="Ingrese la region"
+      class="form-control" required>
+      <br>
+      <b>Nombre Provincias:</b>
+      <select class="form-control"id="nombre_jt" name="nombre_jt" required>
+              <option value="azuay">Azuay</option>
+              <option value="bolivar">Bolívar</option>
+              <option value="cañar">Cañar</option>
+              <option value="carchi">Carchi</option>
+              <option value="chimborazo">Chimborazo</option>
+              <option value="cotopaxi">Cotopaxi</option>
+              <option value="el-oro">El Oro</option>
+              <option value="esmeraldas">Esmeraldas</option>
+              <option value="galapagos">Galápagos</option>
+              <option value="guayas">Guayas</option>
+              <option value="imbabura">Imbabura</option>
+              <option value="loja">Loja</option>
+              <option value="los-rios">Los Ríos</option>
+              <option value="manabi">Manabí</option>
+              <option value="morona-santiago">Morona Santiago</option>
+              <option value="napo">Napo</option>
+              <option value="orellana">Orellana</option>
+              <option value="pastaza">Pastaza</option>
+              <option value="pichincha">Pichincha</option>
+              <option value="santa-elena">Santa Elena</option>
+              <option value="santo-domingo-tsachilas">Santo Domingo de los Tsáchilas</option>
+              <option value="sucumbios">Sucumbíos</option>
+              <option value="tungurahua">Tungurahua</option>
+              <option value="zamora-chinchipe">Zamora-Chinchipe</option>
+          </select>
+      <br>
+      <b>Capital:</b>
+      <input type="text" name="capital_jt" id="capital_jt"
+      value="{{provincia.capital_jt}}" placeholder="Ingrese la capital"
+      class="form-control" required>
+      <br>
+      <b>Ciudad:</b>
+      <input type="text" name="ciudad_jt" id="ciudad_jt"
+      value="{{provincia.ciudad_jt}}" placeholder="Ingrese la ciudad"
+      class="form-control" required>
+      <br>
+
+      <center>
+        <button type="submit" name="button"
+        class="btn btn-primary">
+          &nbsp;&nbsp;&nbsp;Guardar&nbsp;&nbsp;&nbsp;
+        </button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/provincia/"
+        class="btn btn-danger">
+          Cancelar
+        </a>
+      </center>
+    </form>
+  </div>
+</div>
+{% endblock %}

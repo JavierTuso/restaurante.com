@@ -1,0 +1,21 @@
+{# heredando header y footer#}
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<div style="position: relative;">
+      <video src="https://diverxo.com/wp-content/uploads/2023/01/trailer-diverxo-1080p.mp4" autoplay muted loop poster="posterimage.jpg" style="width:100%; opacity:0.5">
+        Tu navegador no soporta el elemento de video.
+      </video>
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: black; font-size: 200px; font-family: 'Pacifico', cursive;">
+
+        BIENVENIDOS
+        <p class="cursiva-pequena">RESTAURANT OF JAVIER TUSO</p>
+
+      </div>
+
+</div>
+
+
+
+{% endblock %}

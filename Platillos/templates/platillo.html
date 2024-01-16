@@ -1,0 +1,182 @@
+{# heredando header y footer#}
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<div class="seccion-con-fondo" style="background-image: url('{% static 'img/fondo.png' %}'); background-size: cover; background-position: center; opacity:0.9;>
+
+
+
+    <div class="row">
+      <div class="col-md-4 mx-auto">
+        <br>
+        <h1>LISTADO DE PLATILLOS</h1>
+        <br>
+        <br>
+        <form class="3" action="/guardarPlatillo/" method="post" enctype="multipart/form-data" id="frm_nuevo_platillo" style= "border-radius:10px;border: 3px solid #ccc; padding: 20px;">
+          {% csrf_token %}
+          <br>
+          <b>Nombre de Platillo:</b>
+          <input type="text" name="nombrePlatillo_jt" id="nombrePlatillo_jt" value=""placeholder="Ingrese el nombre del platillo" class="form-control" required>
+          <br>
+          <b>Tipo de Platillo:</b>
+          <select class="form-control" name="tipo" id="tipo" required>
+              <option value="">---Seleccione el tipo de platillo-----</option>
+              {% for tipo in tipos %}
+                  <option value="{{ tipo.idTipo_jt }}" {% if platillo.tipo and platillo.tipo.idTipo_jt == tipo.idTipo_jt %}selected{% endif %}>
+                      {{ tipo.nombreTipo_jt }}
+                  </option>
+              {% endfor %}
+          </select>
+          <br>
+          <b>Descripcion:</b>
+          <textarea name="descripcionPlatillo_jt" id="descripcionPlatillo_jt" rows="3" class="form-control" placeholder="Ingrese la descripcion" class="form-control" required>
+            </textarea>
+          <br>
+          <b>Precio</b>
+          <input type="number" name="precioPlatillo_jt" id="precioPlatillo_jt" value=""placeholder="Ingrese el precio del platillo" class="form-control" required>
+
+          <br>
+            <center>
+            <button type="submit" name="button" class="btn btn-primary">
+              GUARDAR  </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="reset" name="button" class="btn btn-warning">CANCELAR</button>
+            </center>
+          </form>
+          <br>
+          <br>
+        </div>
+      </div>
+          </div>
+          <br>
+          <br>
+      <div class="container">
+           <br>
+        <table class="table" id="tbl_platillos">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>NOMBRE PLATILLO</th>
+              <th>TIPO</th>
+              <th>DESCRIPCION</th>
+              <th>PRECIO</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+        <tbody>
+          {% for platillo in platillos %}
+          <tr>
+            <td>{{ platillo.idPlatillo_jt }}</td>
+            <td>{{ platillo.nombrePlatillo_jt }}</td>
+            <td>{{ platillo.tipo.nombreTipo_jt }}</td>
+            <td>{{ platillo.descripcionPlatillo_jt }}</td>
+            <td>{{ platillo.precioPlatillo_jt }}</td>
+
+              <td>
+                <a href="/editarPlatillo/{{platillo.idPlatillo_jt}}" class="btn btn-info">Editar</a>
+                <a href="javascript:void(0)"
+                onclick="eliminarPlatillo('/eliminarPlatillo/{{platillo.idPlatillo_jt}}');"
+                class="btn btn-danger">
+                  Eliminar
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        </table>
+      </div>
+
+    </div>
+      <script type="text/javascript">
+        function eliminarPlatillo(url){
+          iziToast.question({
+              timeout: 15000,
+              close: true,
+              overlay: true,
+              displayMode: 'once',
+              id: 'question',
+              zindex: 999,
+              title: 'CONFIRMACIÓN',
+              message: '¿Está seguro de eliminar la fila seleccionada?',
+              position: 'center',
+              buttons: [
+                  ['<button><b>SI</b></button>', function (instance, toast) {
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                      window.location.href=url;
+                  }, true],
+                  ['<button>NO</button>', function (instance, toast) {
+
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                  }],
+              ]
+          });
+        }
+        // Muestra un mensaje de éxito para el guardado
+              {% if messages %}
+                {% for message in messages %}
+                          iziToast.success({
+                              title: 'Éxito',
+                              message: '{{ message }}',
+                              position: 'topRight',
+                          });
+                      {% endfor %}
+              {% endif %}
+      </script>
+      <script type="text/javascript">
+       $("#frm_nuevo_platillo").validate({
+         rules:{
+
+            "nombrePlatillo_jt":{
+              required:true,
+
+            },
+            "tipo":{
+              required:true
+            },
+            "descripcionPlatillo_jt":{
+              required:true
+            },
+            "precioPlatillo_jt":{
+              required:true,
+              min: 0,
+              number:true,
+              maxlength:7
+
+            },
+         },
+         messages:{
+           "nombrePlatillo_jt":{
+             required:"Debe  ingresar el nombre de su platillo",
+
+           },
+           "tipo":{
+             required:"Debe elegir el tipo de platillo"
+           },
+           "descripcionPlatillo_jt":{
+             required:"Debe ingresar la descripcion"
+           },
+           "precioPlatillo_jt":{
+             required:"Debe ingresar el precio del Pedido",
+             min: "No puede ingresar números negativos",
+             number:"Ingrese un valor válido",
+             maxlength:"Precio excedido",
+             step:"Precio inválido"
+           },
+         }
+       });
+    </script>
+
+    <script type="text/javascript">
+           let table = new DataTable('#tbl_clientes');
+            $('#tbl_platillos').DataTable( {
+              dom: 'Bfrtip',
+              buttons: [
+              ],language: {
+              url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+          }
+            } );
+          </script>
+
+
+{% endblock %}

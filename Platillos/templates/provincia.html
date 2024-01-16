@@ -1,0 +1,218 @@
+{# heredando header y footer#}
+{% extends "./plantilla.html" %}
+{% block contenido %}
+{% load static %}
+
+<div class="seccion-con-fondo" style="background-image: url('{% static 'img/fondo.png' %}'); background-size: cover; background-position: center;">
+
+    <div class="row">
+      <div class="col-md-4 mx-auto">
+
+          <br>
+          <h1>LISTADO DE PROVINCIAS </h1>
+          <br>
+          <br>
+          <form class="3" action="/guardarProvincia/" method="post" enctype="multipart/form-data" id="frm_nuevo_provincia" style="border-radius:10px;border: 3px solid #ccc; padding: 20px;">
+
+          {% csrf_token %}
+          <b>Region:</b>
+          <input type="text" name="region_jt" id="region_jt" value="" placeholder="Ingrese la región" class="form-control" required>
+          <br>
+          <b>Nombre Provincias:</b>
+          <select class="form-control"id="nombre_jt" name="nombre_jt" required>
+                  <option value="Azuay">Azuay</option>
+                  <option value="bolivar">Bolívar</option>
+                  <option value="Cañar">Cañar</option>
+                  <option value="Carchi">Carchi</option>
+                  <option value="Chimborazo">Chimborazo</option>
+                  <option value="Cotopaxi">Cotopaxi</option>
+                  <option value="El-oro">El Oro</option>
+                  <option value="Esmeraldas">Esmeraldas</option>
+                  <option value="Galapagos">Galápagos</option>
+                  <option value="Guayas">Guayas</option>
+                  <option value="Imbabura">Imbabura</option>
+                  <option value="Loja">Loja</option>
+                  <option value="Los-rios">Los Ríos</option>
+                  <option value="Manabi">Manabí</option>
+                  <option value="Morona-santiago">Morona Santiago</option>
+                  <option value="Napo">Napo</option>
+                  <option value="Orellana">Orellana</option>
+                  <option value="Pastaza">Pastaza</option>
+                  <option value="Pichincha">Pichincha</option>
+                  <option value="Santa-Elena">Santa Elena</option>
+                  <option value="Santo-Domingo-Tsachilas">Santo Domingo de los Tsáchilas</option>
+                  <option value="Sucumbios">Sucumbíos</option>
+                  <option value="Tungurahua">Tungurahua</option>
+                  <option value="Zamora-Chinchipe">Zamora-Chinchipe</option>
+              </select>
+          <br>
+          <b>Capital:</b>
+          <input type="text" name="capital_jt" id="capital_jt" value=""placeholder="Ingrese la capital" class="form-control" required>
+          <br>
+          <b>Ciudad</b>
+          <input type="text" name="ciudad_jt" id="ciudad_jt" value=""placeholder="Ingrese la ciudad" class="form-control" required>
+          <br>
+            <center>
+            <button type="submit" name="button" class="btn btn-primary">
+              GUARDAR  </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="reset" name="button" class="btn btn-warning">CANCELAR</button>
+            </center>
+        </form>
+        <br>
+        <br>
+      </div>
+    </div>
+        </div>
+        <br>
+        <br>
+      <div class="container">
+        <table class="table" id="tbl_provincias">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>REGION</th>
+              <th>NOMBRE DE PROVINCIA</th>
+              <th>CAPITAL</th>
+              <th>CIUDAD</th>
+              <th>ACCIONES</th>
+            </tr>
+          </thead>
+        <tbody>
+          {% for provincia in provincias %}
+            <tr>
+              <td> {{provincia.id_jt}}</td>
+              <td> {{provincia.region_jt}} </td>
+              <td> {{provincia.nombre_jt}}</td>
+              <td> {{provincia.capital_jt}}</td>
+              <td> {{provincia.ciudad_jt}}</td>
+              <td>
+                <a href="/editarProvincia/{{provincia.id_jt}}" class="btn btn-info">Editar</a>
+                <a href="javascript:void(0)"
+                onclick="eliminarProvincia('/eliminarProvincia/{{provincia.id_jt}}');"
+                class="btn btn-danger">
+                  Eliminar
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        </table>
+
+    </div>
+
+<br><br>
+
+
+      <script type="text/javascript">
+        function eliminarProvincia(url){
+          iziToast.question({
+              timeout: 15000,
+              close: true,
+              overlay: true,
+              displayMode: 'once',
+              id: 'question',
+              zindex: 999,
+              title: 'CONFIRMACIÓN',
+              message: '¿Está seguro de eliminar la fila seleccionado?',
+              position: 'center',
+              buttons: [
+                  ['<button>SI</button>', function (instance, toast) {
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                      window.location.href=url;
+                  }, true],
+                  ['<button>NO</button>', function (instance, toast) {
+
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                  }],
+              ]
+          });
+        }
+        // Muestra un mensaje de éxito para el guardado
+              {% if messages %}
+                {% for message in messages %}
+                          iziToast.success({
+                              title: 'Éxito',
+                              message: '{{ message }}',
+                              position: 'topRight',
+                          });
+                      {% endfor %}
+              {% endif %}
+      </script>
+
+      <!-- Ajuste del identificador del formulario en el script de validación -->
+      <script type="text/javascript">
+  $(document).ready(function() {
+    // Agregar regla personalizada para permitir solo letras y sin espacios
+    $.validator.addMethod("lettersonly", function(value, element) {
+      return this.optional(element) || /^[A-Za-z]+$/i.test(value);
+    }, "Ingrese solo letras y sin espacios.");
+
+    // Agregar regla personalizada para evitar espacios en blanco
+    $.validator.addMethod("noSpace", function(value, element) {
+      return this.optional(element) || !/\s/.test(value);
+    }, "No se permiten espacios en blanco.");
+
+    $("#frm_nuevo_provincia").validate({
+      rules: {
+        "region_jt": {
+          required: true,
+          lettersonly: true,
+          noSpace: true,
+        },
+        "nombre_jt": {
+          required: true,
+          noSpace: true,
+        },
+        "capital_jt": {
+          required: true,
+          lettersonly: true,
+          noSpace: true,
+        },
+        "ciudad_jt": {
+          required: true,
+          lettersonly: true,
+          noSpace: true,
+        },
+      },
+      messages: {
+        "region_jt": {
+          required: "Debe elegir la región del cliente",
+          lettersonly: "Ingrese solo letras en la región.",
+          noSpace: "No se permiten espacios en blanco.",
+        },
+        "nombre_jt": {
+          required: "Debe elegir la provincia cliente",
+          noSpace: "No se permiten espacios en blanco.",
+        },
+        "capital_jt": {
+          required: "Debe ingresar la capital",
+          lettersonly: "Ingrese solo letras en la capital.",
+          noSpace: "No se permiten espacios en blanco.",
+        },
+        "ciudad_jt": {
+          required: "Debe ingresar la ciudad",
+          lettersonly: "Ingrese solo letras en la ciudad.",
+          noSpace: "No se permiten espacios en blanco.",
+        },
+      },
+    });
+  });
+</script>
+
+
+
+<script type="text/javascript">
+      // let table = new DataTable('#tbl_tipos');
+        $('#tbl_provincias').DataTable( {
+          dom: 'Bfrtip',
+          buttons: [
+          ],
+          language: {
+              url: "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+          }
+        } );
+      </script>
+
+
+{% endblock %}
